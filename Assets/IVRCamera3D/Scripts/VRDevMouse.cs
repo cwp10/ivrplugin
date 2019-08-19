@@ -8,6 +8,7 @@ namespace IVR
         private Transform _bodyTransform = null;
         private float _mouseX = 0;
         private float _mouseY = 0;
+        private float _mouseZ = 0;
 
         void Awake()
         {
@@ -21,24 +22,34 @@ namespace IVR
         {
             if (IVRDevice.IsHMDAttached()) return;
 
+            bool rolled = false;
+
 #if UNITY_EDITOR_OSX
-        if (Input.GetKey(KeyCode.Alpha3))
-        {
-            _bodyTransform.localRotation = Quaternion.identity;
-            _mouseX = 0;
-            _mouseY = 0;
-        }
+            if (Input.GetKey(KeyCode.Alpha3))
+            {
+                _bodyTransform.localRotation = Quaternion.identity;
+                _mouseX = 0;
+                _mouseY = 0;
+            }
 #endif
 
-            _mouseX += Input.GetAxis("Mouse X") * kSensitivity;
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                _mouseZ += Input.GetAxis("Mouse X") * kSensitivity;
+                _mouseZ = Mathf.Clamp(_mouseZ, -85, 85);
+            }
+            else
+            {
+                _mouseX += Input.GetAxis("Mouse X") * kSensitivity;
 
-            if (_mouseX <= -180) _mouseX += 360;
-            else if (_mouseX > 180) _mouseX -= 360;
+                if (_mouseX <= -180) _mouseX += 360;
+                else if (_mouseX > 180) _mouseX -= 360;
 
-            _mouseY -= Input.GetAxis("Mouse Y") * kSensitivity;
-            _mouseY = Mathf.Clamp(_mouseY, -85, 85);
+                _mouseY -= Input.GetAxis("Mouse Y") * kSensitivity;
+                _mouseY = Mathf.Clamp(_mouseY, -85, 85);
+            }
 
-            _bodyTransform.localRotation = Quaternion.Euler(0, this.transform.localRotation.eulerAngles.y, 0.0f) * Quaternion.Euler(_mouseY, _mouseX, 0.0f);
+            _bodyTransform.localRotation = Quaternion.Euler(0, this.transform.localRotation.eulerAngles.y, 0.0f) * Quaternion.Euler(_mouseY, _mouseX, _mouseZ);
         }
     }
 }
