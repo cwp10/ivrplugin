@@ -73,9 +73,6 @@ namespace IVR
             rightCamera = Instantiate(originalCamera, Vector3.zero, Quaternion.identity) as Camera;
             rightCamera.name = "rightCamera";
 
-            originalCamera.enabled = false;
-
-
             _head = new GameObject("head");
             _head.transform.parent = this.transform;
             _head.transform.localPosition = Vector3.zero;
@@ -102,7 +99,7 @@ namespace IVR
             rightCamera.transform.localRotation = Quaternion.identity;
             //if (!_is3rdCamera)
             //{
-            originalCamera.GetComponent<Camera>().rect = new Rect(0.25f, 0, 0.5f, 1);
+            //originalCamera.GetComponent<Camera>().rect = new Rect(0.25f, 0, 0.5f, 1);
             leftCamera.GetComponent<Camera>().rect = new Rect(0, 0, 0.5f, 1);
             rightCamera.GetComponent<Camera>().rect = new Rect(0.5f, 0, 0.5f, 1);
             //}
@@ -112,6 +109,26 @@ namespace IVR
             //}
 
             //Screen.SetResolution (3840,1080, true);
+
+            Debug.Log(Display.displays.Length);
+
+            if (Display.displays.Length <= 1)
+            {
+                originalCamera.enabled = false;
+                leftCamera.targetDisplay = 0;
+                rightCamera.targetDisplay = 0;
+                Display.displays[0].Activate();
+            }
+            else
+            {
+                originalCamera.targetDisplay = 0;
+                leftCamera.targetDisplay = 1;
+                rightCamera.targetDisplay = 1;
+
+                Display.displays[0].Activate();
+                Display.displays[1].Activate();
+            }
+
 #if !UNITY_EDITOR_OSX
             ConfigureCameraLensCorrection(ref leftCamera);
             ConfigureCameraLensCorrection(ref rightCamera);
