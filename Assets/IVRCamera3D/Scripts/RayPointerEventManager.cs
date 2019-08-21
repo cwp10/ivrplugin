@@ -48,7 +48,6 @@ namespace IVR
         public virtual void OnApplicationQuit()
         {
             _applicationIsQuitting = true;
-            _instance = null;
         }
 
         public void Register(IRayPointer rayPointer)
