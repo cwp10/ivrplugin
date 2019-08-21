@@ -21,9 +21,6 @@ namespace IVR
         void Update()
         {
             if (IVRDevice.IsHMDAttached()) return;
-
-            bool rolled = false;
-
 #if UNITY_EDITOR_OSX
             if (Input.GetKey(KeyCode.Alpha3))
             {
